@@ -57,6 +57,26 @@ function App(props) {
                                 });
                                 setweatherInfoForecasts(weatherInfos);
                             });
+                             // Fetch seven-day forecast
+                             fetch(`${api.base}/forecast?q=${resFinal.name}&units=metric&appid=${api.key}`)
+                             .then((res) => res.json())
+                             .then((resFinal) => {
+
+                                 const dailyForecasts = resFinal.list.filter((forecast, index) => index % 8 === 0);
+                                 const weatherInfos2 = dailyForecasts.map((forecast) => {
+
+                                     let forecastIcon_sevenday2 = getWeatherIcon(forecast.weather[0].icon);
+
+                                     return {
+                                         day: new Date(forecast.dt * 1000).toLocaleDateString('en-US', { weekday: 'long' }),
+                                         temperature: Math.round(forecast.main.temp),
+                                         condition: forecast.weather[0].description,
+                                         icon: forecastIcon_sevenday2,
+                                     };
+                                 });
+
+                                 setSevenDayForecast(weatherInfos2);
+                             });
 
 
                     } else {
